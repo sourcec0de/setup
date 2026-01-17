@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [main, feat/**]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-installer:
+    runs-on: macos-14  # Apple Silicon runner
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run installer
+        run: |
+          chmod +x ./go.sh
+          ./go.sh
+
+      - name: Verify directory structure
+        run: |
+          echo "Checking SDK directories..."
+          test -d "$HOME/sdk/google-cloud-sdk" || { echo "FAIL: google-cloud-sdk not found"; exit 1; }
+          test -d "$HOME/sdk/node24.13.0" || { echo "FAIL: node24.13.0 not found"; exit 1; }
+          test -d "$HOME/sdk/go1.25.6" || { echo "FAIL: go1.25.6 not found"; exit 1; }
+          test -d "$HOME/.local/bin" || { echo "FAIL: .local/bin not found"; exit 1; }
+          echo "All directories exist"
+
+      - name: Verify commands and versions
+        run: |
+          # Source zprofile to set up PATH and environment
+          source "$HOME/.zprofile"
+
+          echo "==> Checking brew..."
+          brew --version
+
+          echo "==> Checking node..."
+          node --version
+          node --version | grep -q "v24.13.0" || { echo "FAIL: Expected node v24.13.0"; exit 1; }
+
+          echo "==> Checking npm..."
+          npm --version
+
+          echo "==> Checking go..."
+          go version
+          go version | grep -q "go1.25.6" || { echo "FAIL: Expected go1.25.6"; exit 1; }
+
+          echo "==> Checking gcloud..."
+          gcloud --version
+
+          echo "==> Checking kubectl..."
+          kubectl version --client
+
+          echo "==> Checking gh..."
+          gh --version
+
+          echo "==> Checking fastfetch..."
+          fastfetch --version
+
+          echo "All commands verified successfully"
+
+      - name: Verify GOROOT
+        run: |
+          source "$HOME/.zprofile"
+
+          expected="$HOME/sdk/go1.25.6"
+          if [[ "$GOROOT" != "$expected" ]]; then
+            echo "FAIL: GOROOT is '$GOROOT', expected '$expected'"
+            exit 1
+          fi
+          echo "GOROOT is correctly set to $GOROOT"
