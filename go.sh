@@ -24,6 +24,17 @@ fi
 
 echo "==> Detected architecture: $ARCH"
 
+# Install Homebrew
+install_homebrew() {
+    if command -v brew &>/dev/null; then
+        echo "==> Homebrew already installed, skipping..."
+        return
+    fi
+
+    echo "==> Installing Homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+}
+
 # Create directories
 echo "==> Creating directories..."
 mkdir -p "$SDK_DIR"
@@ -139,6 +150,7 @@ install_gh() {
 main() {
     echo "==> Starting environment setup..."
 
+    install_homebrew
     install_gcloud
     install_node
     install_go
