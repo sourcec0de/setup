@@ -30,8 +30,12 @@ jobs:
 
       - name: Verify commands and versions
         run: |
-          # Source zprofile to set up PATH and environment
-          source "$HOME/.zprofile"
+          # Set up PATH explicitly for bash (zprofile has zsh-specific sourcing)
+          export PATH="$HOME/.local/bin:$PATH"
+          export PATH="$HOME/sdk/node24.13.0/bin:$PATH"
+          export PATH="$HOME/sdk/go1.25.6/bin:$HOME/go/bin:$PATH"
+          export PATH="$HOME/sdk/google-cloud-sdk/bin:$PATH"
+          export GOROOT="$HOME/sdk/go1.25.6"
 
           echo "==> Checking brew..."
           brew --version
@@ -63,7 +67,7 @@ jobs:
 
       - name: Verify GOROOT
         run: |
-          source "$HOME/.zprofile"
+          export GOROOT="$HOME/sdk/go1.25.6"
 
           expected="$HOME/sdk/go1.25.6"
           if [[ "$GOROOT" != "$expected" ]]; then
