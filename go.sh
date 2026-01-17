@@ -146,6 +146,17 @@ install_gh() {
     brew install gh
 }
 
+# Install fastfetch via Homebrew
+install_fastfetch() {
+    if command -v fastfetch &>/dev/null; then
+        echo "==> fastfetch already installed, skipping..."
+        return
+    fi
+
+    echo "==> Installing fastfetch via Homebrew..."
+    brew install fastfetch
+}
+
 # Main
 main() {
     echo "==> Starting environment setup..."
@@ -156,6 +167,7 @@ main() {
     install_go
     configure_zprofile
     install_gh
+    install_fastfetch
 
     echo ""
     echo "==> Setup complete!"
