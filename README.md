@@ -1,6 +1,16 @@
 # Setup
 
-Bootstrap a new macOS machine with development tools.
+[![CI](https://github.com/sourcec0de/setup/actions/workflows/ci.yml/badge.svg)](https://github.com/sourcec0de/setup/actions/workflows/ci.yml)
+
+Bootstrap a new macOS or Linux machine with development tools.
+
+## Supported Platforms
+
+| Platform | Architecture |
+|----------|--------------|
+| macOS 26 (Tahoe) | ARM64 (Apple Silicon) |
+| Ubuntu 24.04 | x64 |
+| Ubuntu 24.04 | ARM64 |
 
 ## Quick Install
 
@@ -11,9 +21,11 @@ curl -fsSL https://raw.githubusercontent.com/sourcec0de/setup/main/go.sh | bash
 ## What's Installed
 
 - **Google Cloud SDK** - gcloud, kubectl, alpha, beta, docker-credential-gcr, gke-gcloud-auth-plugin
-- **Node.js** - LTS version
-- **Go** - Latest stable
+- **Node.js** - v24.13.0
+- **Go** - v1.25.6
 - **gh** - GitHub CLI
+- **fastfetch** - System information tool
+- **tree-sitter** - Parser generator CLI
 
 ## Post-Install
 
