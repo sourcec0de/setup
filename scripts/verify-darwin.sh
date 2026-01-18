@@ -15,6 +15,12 @@ export PATH="$HOME/sdk/go${GO_VERSION}/bin:$HOME/go/bin:$PATH"
 export PATH="$HOME/sdk/google-cloud-sdk/bin:$PATH"
 export GOROOT="$HOME/sdk/go${GO_VERSION}"
 
+echo "==> DEBUG: PATH=$PATH"
+echo "==> DEBUG: Checking brew location..."
+command -v brew || echo "brew not in PATH"
+ls -la /opt/homebrew/bin/brew 2>/dev/null || echo "/opt/homebrew/bin/brew not found"
+ls -la /usr/local/bin/brew 2>/dev/null || echo "/usr/local/bin/brew not found"
+
 echo "==> Verifying directory structure..."
 test -d "$HOME/sdk/google-cloud-sdk" || { echo "FAIL: google-cloud-sdk not found"; exit 1; }
 test -d "$HOME/sdk/node${NODE_VERSION}" || { echo "FAIL: node${NODE_VERSION} not found"; exit 1; }
@@ -23,7 +29,7 @@ test -d "$HOME/.local/bin" || { echo "FAIL: .local/bin not found"; exit 1; }
 echo "All directories exist"
 
 echo "==> Checking brew..."
-brew --version
+brew --version || { echo "FAIL: brew not working"; exit 1; }
 
 echo "==> Checking node..."
 node --version
