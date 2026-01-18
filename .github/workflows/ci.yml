@@ -2,9 +2,11 @@ name: CI
 
 on:
   push:
-    branches: [main, feat/**]
+    branches: [main]
+
   pull_request:
     branches: [main]
+
   schedule:
     # Run nightly at 2:00 AM UTC
     - cron: '0 2 * * *'
@@ -26,6 +28,7 @@ jobs:
             arch: x64
             platform: linux
             name: Linux x64
+          
           - os: ubuntu-24.04-arm
             arch: arm64
             platform: linux
@@ -38,27 +41,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Verify architecture
-        run: |
-          echo "Runner OS: ${{ matrix.os }}"
-          echo "Expected arch: ${{ matrix.arch }}"
-          echo "Actual arch: $(uname -m)"
-
       - name: Run installer
         run: |
           chmod +x ./go.sh ./scripts/*.sh
           ./go.sh
-
-      - name: Debug PATH and tools
-        if: always()
-        run: |
-          echo "PATH: $PATH"
-          echo "which brew: $(which brew 2>/dev/null || echo 'not found')"
-          echo "brew location check:"
-          ls -la /opt/homebrew/bin/brew 2>/dev/null || echo "/opt/homebrew/bin/brew not found"
-          ls -la /usr/local/bin/brew 2>/dev/null || echo "/usr/local/bin/brew not found"
-          echo "SDK contents:"
-          ls -la $HOME/sdk/ 2>/dev/null || echo "SDK dir not found"
 
       - name: Run verification
         run: bash ./scripts/verify-${{ matrix.platform }}.sh
