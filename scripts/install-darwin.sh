@@ -32,13 +32,27 @@ mkdir -p "$SDK_DIR"
 mkdir -p "$LOCAL_BIN"
 
 install_homebrew() {
+    # Add Homebrew to PATH (Apple Silicon and Intel locations)
+    if [[ -f /opt/homebrew/bin/brew ]]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    elif [[ -f /usr/local/bin/brew ]]; then
+        eval "$(/usr/local/bin/brew shellenv)"
+    fi
+
     if command -v brew &>/dev/null; then
         echo "==> Homebrew already installed, skipping..."
         return
     fi
 
     echo "==> Installing Homebrew..."
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+    # Set up PATH after fresh install
+    if [[ -f /opt/homebrew/bin/brew ]]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    elif [[ -f /usr/local/bin/brew ]]; then
+        eval "$(/usr/local/bin/brew shellenv)"
+    fi
 }
 
 install_gcloud() {
