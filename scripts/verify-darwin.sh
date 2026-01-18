@@ -7,7 +7,8 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/versions.sh"
 
-# Set up PATH
+# Set up PATH (include Homebrew for Apple Silicon and Intel)
+export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/sdk/node${NODE_VERSION}/bin:$PATH"
 export PATH="$HOME/sdk/go${GO_VERSION}/bin:$HOME/go/bin:$PATH"
