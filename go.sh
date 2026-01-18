@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Versions
-NODE_VERSION="24.13.0"
-GO_VERSION="1.25.6"
+# Load shared versions
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/scripts/versions.sh"
 
 # Directories
 SDK_DIR="$HOME/sdk"
@@ -157,6 +157,17 @@ install_fastfetch() {
     brew install fastfetch
 }
 
+# Install tree-sitter-cli via Homebrew
+install_tree_sitter() {
+    if command -v tree-sitter &>/dev/null; then
+        echo "==> tree-sitter already installed, skipping..."
+        return
+    fi
+
+    echo "==> Installing tree-sitter via Homebrew..."
+    brew install tree-sitter
+}
+
 # Main
 main() {
     echo "==> Starting environment setup..."
@@ -168,6 +179,7 @@ main() {
     configure_zprofile
     install_gh
     install_fastfetch
+    install_tree_sitter
 
     echo ""
     echo "==> Setup complete!"

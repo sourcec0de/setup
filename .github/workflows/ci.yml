@@ -11,70 +11,47 @@ on:
 
 jobs:
   test-installer:
-    runs-on: macos-14  # Apple Silicon runner
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # macOS runners
+          - os: macos-14
+            arch: arm64
+            platform: darwin
+            name: macOS ARM64
+          - os: macos-13
+            arch: x64
+            platform: darwin
+            name: macOS x64
+
+          # Linux runners
+          - os: ubuntu-24.04
+            arch: x64
+            platform: linux
+            name: Linux x64
+          - os: ubuntu-24.04-arm
+            arch: arm64
+            platform: linux
+            name: Linux ARM64
+
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.name }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Verify architecture
+        run: |
+          echo "Runner OS: ${{ matrix.os }}"
+          echo "Expected arch: ${{ matrix.arch }}"
+          echo "Actual arch: $(uname -m)"
 
       - name: Run installer
         run: |
           chmod +x ./go.sh
           ./go.sh
 
-      - name: Verify directory structure
-        run: |
-          echo "Checking SDK directories..."
-          test -d "$HOME/sdk/google-cloud-sdk" || { echo "FAIL: google-cloud-sdk not found"; exit 1; }
-          test -d "$HOME/sdk/node24.13.0" || { echo "FAIL: node24.13.0 not found"; exit 1; }
-          test -d "$HOME/sdk/go1.25.6" || { echo "FAIL: go1.25.6 not found"; exit 1; }
-          test -d "$HOME/.local/bin" || { echo "FAIL: .local/bin not found"; exit 1; }
-          echo "All directories exist"
-
-      - name: Verify commands and versions
-        run: |
-          # Set up PATH explicitly for bash (zprofile has zsh-specific sourcing)
-          export PATH="$HOME/.local/bin:$PATH"
-          export PATH="$HOME/sdk/node24.13.0/bin:$PATH"
-          export PATH="$HOME/sdk/go1.25.6/bin:$HOME/go/bin:$PATH"
-          export PATH="$HOME/sdk/google-cloud-sdk/bin:$PATH"
-          export GOROOT="$HOME/sdk/go1.25.6"
-
-          echo "==> Checking brew..."
-          brew --version
-
-          echo "==> Checking node..."
-          node --version
-          node --version | grep -q "v24.13.0" || { echo "FAIL: Expected node v24.13.0"; exit 1; }
-
-          echo "==> Checking npm..."
-          npm --version
-
-          echo "==> Checking go..."
-          go version
-          go version | grep -q "go1.25.6" || { echo "FAIL: Expected go1.25.6"; exit 1; }
-
-          echo "==> Checking gcloud..."
-          gcloud --version
-
-          echo "==> Checking kubectl..."
-          kubectl version --client
-
-          echo "==> Checking gh..."
-          gh --version
-
-          echo "==> Checking fastfetch..."
-          fastfetch --version
-
-          echo "All commands verified successfully"
-
-      - name: Verify GOROOT
-        run: |
-          export GOROOT="$HOME/sdk/go1.25.6"
-
-          expected="$HOME/sdk/go1.25.6"
-          if [[ "$GOROOT" != "$expected" ]]; then
-            echo "FAIL: GOROOT is '$GOROOT', expected '$expected'"
-            exit 1
-          fi
-          echo "GOROOT is correctly set to $GOROOT"
+      - name: Run verification
+        run: ./scripts/verify-${{ matrix.platform }}.sh
