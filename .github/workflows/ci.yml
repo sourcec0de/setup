@@ -15,15 +15,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # macOS runners
-          - os: macos-14
+          # macOS runner
+          - os: macos-26
             arch: arm64
             platform: darwin
             name: macOS ARM64
-          - os: macos-13
-            arch: x64
-            platform: darwin
-            name: macOS x64
 
           # Linux runners
           - os: ubuntu-24.04
