@@ -46,8 +46,8 @@ jobs:
 
       - name: Run installer
         run: |
-          chmod +x ./go.sh
+          chmod +x ./go.sh ./scripts/*.sh
           ./go.sh
 
       - name: Run verification
-        run: ./scripts/verify-${{ matrix.platform }}.sh
+        run: bash ./scripts/verify-${{ matrix.platform }}.sh
