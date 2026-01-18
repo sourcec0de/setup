@@ -49,5 +49,16 @@ jobs:
           chmod +x ./go.sh ./scripts/*.sh
           ./go.sh
 
+      - name: Debug PATH and tools
+        if: always()
+        run: |
+          echo "PATH: $PATH"
+          echo "which brew: $(which brew 2>/dev/null || echo 'not found')"
+          echo "brew location check:"
+          ls -la /opt/homebrew/bin/brew 2>/dev/null || echo "/opt/homebrew/bin/brew not found"
+          ls -la /usr/local/bin/brew 2>/dev/null || echo "/usr/local/bin/brew not found"
+          echo "SDK contents:"
+          ls -la $HOME/sdk/ 2>/dev/null || echo "SDK dir not found"
+
       - name: Run verification
         run: bash ./scripts/verify-${{ matrix.platform }}.sh
