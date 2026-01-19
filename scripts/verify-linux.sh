@@ -47,6 +47,9 @@ fastfetch --version
 echo "==> Checking tree-sitter..."
 tree-sitter --version
 
+echo "==> Checking bpytop..."
+bpytop --version
+
 echo "==> Verifying GOROOT..."
 expected="$HOME/sdk/go${GO_VERSION}"
 if [[ "$GOROOT" != "$expected" ]]; then

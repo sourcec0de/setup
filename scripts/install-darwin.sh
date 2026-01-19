@@ -176,6 +176,16 @@ install_tree_sitter() {
     brew install tree-sitter-cli
 }
 
+install_bpytop() {
+    if command -v bpytop &>/dev/null; then
+        echo "==> bpytop already installed, skipping..."
+        return
+    fi
+
+    echo "==> Installing bpytop via Homebrew..."
+    brew install bpytop
+}
+
 main() {
     echo "==> Starting macOS environment setup..."
 
@@ -187,6 +197,7 @@ main() {
     install_gh
     install_fastfetch
     install_tree_sitter
+    install_bpytop
 
     echo ""
     echo "==> Setup complete!"
