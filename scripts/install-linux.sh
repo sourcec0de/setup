@@ -227,6 +227,18 @@ install_tree_sitter() {
     echo "==> tree-sitter installed: $("$LOCAL_BIN/tree-sitter" --version)"
 }
 
+install_bpytop() {
+    if command -v bpytop &>/dev/null; then
+        echo "==> bpytop already installed, skipping..."
+        return
+    fi
+
+    echo "==> Installing bpytop via pip3..."
+    pip3 install --user bpytop
+
+    echo "==> bpytop installed"
+}
+
 main() {
     echo "==> Starting Linux environment setup..."
 
@@ -237,6 +249,7 @@ main() {
     install_gh
     install_fastfetch
     install_tree_sitter
+    install_bpytop
 
     echo ""
     echo "==> Setup complete!"
