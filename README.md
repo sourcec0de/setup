@@ -22,7 +22,7 @@ curl -fsSL https://raw.githubusercontent.com/sourcec0de/setup/main/go.sh | bash
 
 - **Google Cloud SDK** - gcloud, kubectl, alpha, beta, docker-credential-gcr, gke-gcloud-auth-plugin
 - **Node.js** - v24.13.0
-- **Go** - v1.25.6
+- **Go** - v1.26.0
 - **gh** - GitHub CLI
 - **fastfetch** - System information tool
 - **tree-sitter** - Parser generator CLI
@@ -51,6 +51,6 @@ $HOME/
 ├── sdk/
 │   ├── google-cloud-sdk/
 │   ├── node24.13.0/
-│   └── go1.25.6/
+│   └── go1.26.0/
 └── .local/bin/
 ```
